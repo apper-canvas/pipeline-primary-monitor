@@ -23,7 +23,7 @@ class ActivityService {
     return { ...activity };
   }
 
-  async create(activityData) {
+async create(activityData) {
     await this.delay();
     const newActivity = {
       ...activityData,
@@ -31,6 +31,42 @@ class ActivityService {
       createdAt: new Date().toISOString()
     };
     this.activities.push(newActivity);
+    
+    // Sync to CompanyHub tests1 table
+    try {
+      const { ApperClient } = window.APPerSDK || window.ApperSDK || {};
+      if (ApperClient) {
+        const apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+
+        const syncResult = await apperClient.functions.invoke(
+          import.meta.env.VITE_SYNC_ACTIVITY_TO_COMPANYHUB,
+          {
+            body: JSON.stringify({ activity: newActivity }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (syncResult.success) {
+          // Import toast dynamically to avoid circular dependencies
+          const { toast } = await import('react-toastify');
+          toast.success('Activity created and synced to CompanyHub successfully');
+        } else {
+          console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_ACTIVITY_TO_COMPANYHUB}. The response body is: ${JSON.stringify(syncResult)}.`);
+          const { toast } = await import('react-toastify');
+          toast.warning('Activity created locally, but sync to CompanyHub failed');
+        }
+      }
+    } catch (error) {
+      console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_ACTIVITY_TO_COMPANYHUB}. The error is: ${error.message}`);
+      const { toast } = await import('react-toastify');
+      toast.warning('Activity created locally, but sync to CompanyHub failed');
+    }
+    
     return { ...newActivity };
   }
 
