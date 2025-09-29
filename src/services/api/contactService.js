@@ -34,7 +34,7 @@ async create(contactData) {
     };
     this.contacts.push(newContact);
     
-    // Sync to CompanyHub after successful local creation
+// Create Stripe customer after successful local creation
     try {
       // Initialize ApperClient if not already done
       if (typeof window !== 'undefined' && window.ApperSDK) {
@@ -44,25 +44,25 @@ async create(contactData) {
           apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
         });
 
-        const syncResult = await apperClient.functions.invoke(import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB, {
+        const createResult = await apperClient.functions.invoke(import.meta.env.VITE_CREATE_STRIPE_CUSTOMER, {
           body: JSON.stringify({ contact: newContact }),
           headers: {
             'Content-Type': 'application/json'
           }
         });
 
-        const syncData = await syncResult.json();
+        const createData = await createResult.json();
         
-        if (syncData.success) {
-          toast.success('Contact created and synced to CompanyHub successfully!');
+        if (createData.success) {
+          toast.success('Contact created and Stripe customer created successfully!');
         } else {
-          console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB}. The response body is: ${JSON.stringify(syncData)}.`);
-          toast.warning('Contact created locally, but sync to CompanyHub failed. Please try again later.');
+          console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_CREATE_STRIPE_CUSTOMER}. The response body is: ${JSON.stringify(createData)}.`);
+          toast.warning('Contact created locally, but Stripe customer creation failed. Please try again later.');
         }
       }
     } catch (error) {
-      console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB}. The error is: ${error.message}`);
-      toast.warning('Contact created locally, but CompanyHub sync is unavailable.');
+      console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_CREATE_STRIPE_CUSTOMER}. The error is: ${error.message}`);
+      toast.warning('Contact created locally, but Stripe customer creation is unavailable.');
     }
     
     return { ...newContact };
