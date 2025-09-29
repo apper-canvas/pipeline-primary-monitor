@@ -1,4 +1,5 @@
 import contactsData from "@/services/mockData/contacts.json";
+import { toast } from 'react-toastify';
 
 class ContactService {
   constructor() {
@@ -23,7 +24,7 @@ class ContactService {
     return { ...contact };
   }
 
-  async create(contactData) {
+async create(contactData) {
     await this.delay();
     const newContact = {
       ...contactData,
@@ -32,6 +33,38 @@ class ContactService {
       updatedAt: new Date().toISOString()
     };
     this.contacts.push(newContact);
+    
+    // Sync to CompanyHub after successful local creation
+    try {
+      // Initialize ApperClient if not already done
+      if (typeof window !== 'undefined' && window.ApperSDK) {
+        const { ApperClient } = window.ApperSDK;
+        const apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+
+        const syncResult = await apperClient.functions.invoke(import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB, {
+          body: JSON.stringify({ contact: newContact }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const syncData = await syncResult.json();
+        
+        if (syncData.success) {
+          toast.success('Contact created and synced to CompanyHub successfully!');
+        } else {
+          console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB}. The response body is: ${JSON.stringify(syncData)}.`);
+          toast.warning('Contact created locally, but sync to CompanyHub failed. Please try again later.');
+        }
+      }
+    } catch (error) {
+      console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SYNC_CONTACT_TO_COMPANYHUB}. The error is: ${error.message}`);
+      toast.warning('Contact created locally, but CompanyHub sync is unavailable.');
+    }
+    
     return { ...newContact };
   }
 
