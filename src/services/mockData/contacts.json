@@ -1,0 +1,122 @@
+[
+  {
+    "Id": 1,
+    "firstName": "Sarah",
+    "lastName": "Johnson",
+    "email": "sarah.johnson@techcorp.com",
+    "phone": "(555) 123-4567",
+    "company": "TechCorp Solutions",
+    "position": "VP of Sales",
+    "notes": "Interested in enterprise-level CRM solutions. Key decision maker for Q2 budget.",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-20T14:15:00Z"
+  },
+  {
+    "Id": 2,
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "email": "m.chen@innovatetech.io",
+    "phone": "(555) 987-6543",
+    "company": "InnovateTech",
+    "position": "CTO",
+    "notes": "Looking for API integrations and custom development. Tech-savvy contact.",
+    "createdAt": "2024-01-18T09:15:00Z",
+    "updatedAt": "2024-01-22T16:45:00Z"
+  },
+  {
+    "Id": 3,
+    "firstName": "Emily",
+    "lastName": "Rodriguez",
+    "email": "emily.r@growthstartup.com",
+    "phone": "(555) 456-7890",
+    "company": "GrowthStartup Inc",
+    "position": "Founder & CEO",
+    "notes": "Early-stage startup. Price-sensitive but high growth potential.",
+    "createdAt": "2024-01-22T11:00:00Z",
+    "updatedAt": "2024-01-25T08:30:00Z"
+  },
+  {
+    "Id": 4,
+    "firstName": "David",
+    "lastName": "Thompson",
+    "email": "david.thompson@enterprises.com",
+    "phone": "(555) 234-5678",
+    "company": "Enterprise Solutions LLC",
+    "position": "Operations Manager",
+    "notes": "Looking to streamline sales processes across multiple departments.",
+    "createdAt": "2024-01-25T13:45:00Z",
+    "updatedAt": "2024-01-28T10:20:00Z"
+  },
+  {
+    "Id": 5,
+    "firstName": "Jennifer",
+    "lastName": "Lee",
+    "email": "j.lee@digitalagency.net",
+    "phone": "(555) 345-6789",
+    "company": "Digital Marketing Agency",
+    "position": "Account Director",
+    "notes": "Manages client relationships for agency. Needs client management tools.",
+    "createdAt": "2024-01-28T14:20:00Z",
+    "updatedAt": "2024-02-01T09:10:00Z"
+  },
+  {
+    "Id": 6,
+    "firstName": "Robert",
+    "lastName": "Wilson",
+    "email": "bob.wilson@consulting.biz",
+    "phone": "(555) 567-8901",
+    "company": "Wilson Consulting",
+    "position": "Senior Partner",
+    "notes": "Independent consultant. Interested in personal productivity features.",
+    "createdAt": "2024-02-01T15:30:00Z",
+    "updatedAt": "2024-02-03T12:15:00Z"
+  },
+  {
+    "Id": 7,
+    "firstName": "Lisa",
+    "lastName": "Anderson",
+    "email": "lisa.anderson@retailchain.com",
+    "phone": "(555) 678-9012",
+    "company": "RetailChain Stores",
+    "position": "Regional Sales Manager",
+    "notes": "Managing 50+ retail locations. Needs territory management capabilities.",
+    "createdAt": "2024-02-03T10:45:00Z",
+    "updatedAt": "2024-02-05T14:30:00Z"
+  },
+  {
+    "Id": 8,
+    "firstName": "James",
+    "lastName": "Parker",
+    "email": "james.parker@manufacturing.org",
+    "phone": "(555) 789-0123",
+    "company": "Parker Manufacturing",
+    "position": "Business Development",
+    "notes": "B2B manufacturing company. Long sales cycles, high-value deals.",
+    "createdAt": "2024-02-05T16:00:00Z",
+    "updatedAt": "2024-02-08T11:25:00Z"
+  },
+  {
+    "Id": 9,
+    "firstName": "Maria",
+    "lastName": "Garcia",
+    "email": "maria.garcia@healthtech.med",
+    "phone": "(555) 890-1234",
+    "company": "HealthTech Medical",
+    "position": "VP of Business Development",
+    "notes": "Healthcare industry. Compliance and security are top priorities.",
+    "createdAt": "2024-02-08T12:30:00Z",
+    "updatedAt": "2024-02-10T15:45:00Z"
+  },
+  {
+    "Id": 10,
+    "firstName": "Chris",
+    "lastName": "Davis",
+    "email": "c.davis@finservices.bank",
+    "phone": "(555) 901-2345",
+    "company": "Financial Services Group",
+    "position": "Director of Sales",
+    "notes": "Financial services sector. Requires detailed reporting and analytics.",
+    "createdAt": "2024-02-10T08:15:00Z",
+    "updatedAt": "2024-02-12T13:20:00Z"
+  }
+]
