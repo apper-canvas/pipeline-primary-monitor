@@ -4,7 +4,10 @@ import Badge from "@/components/atoms/Badge";
 import ApperIcon from "@/components/ApperIcon";
 
 const ActivityTimeline = ({ activities, loading }) => {
-  const getActivityIcon = (type) => {
+const getActivityIcon = (type) => {
+    if (!type || typeof type !== 'string') {
+      return "Activity";
+    }
     switch (type.toLowerCase()) {
       case "call": return "Phone";
       case "email": return "Mail";
@@ -14,7 +17,10 @@ const ActivityTimeline = ({ activities, loading }) => {
     }
   };
 
-  const getActivityColor = (type) => {
+const getActivityColor = (type) => {
+    if (!type || typeof type !== 'string') {
+      return "default";
+    }
     switch (type.toLowerCase()) {
       case "call": return "primary";
       case "email": return "warning";
