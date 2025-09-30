@@ -10,10 +10,10 @@ const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
   const [sortOrder, setSortOrder] = useState("asc");
 
   const sortedContacts = [...contacts].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a[sortBy] > b[sortBy] ? 1 : -1;
+if (sortOrder === "asc") {
+      return (a[sortBy] || '') > (b[sortBy] || '') ? 1 : -1;
     } else {
-      return a[sortBy] < b[sortBy] ? 1 : -1;
+      return (a[sortBy] || '') < (b[sortBy] || '') ? 1 : -1;
     }
   });
 
@@ -61,16 +61,16 @@ const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
           <thead className="bg-slate-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                <SortButton field="firstName">Contact</SortButton>
+<SortButton field="first_name_c">Contact</SortButton>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                <SortButton field="company">Company</SortButton>
+<SortButton field="company_c">Company</SortButton>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Contact Info
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                <SortButton field="createdAt">Added</SortButton>
+<SortButton field="CreatedOn">Added</SortButton>
               </th>
               <th className="relative px-6 py-3">
                 <span className="sr-only">Actions</span>
@@ -85,28 +85,28 @@ const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
                     <div className="h-10 w-10 flex-shrink-0">
                       <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
 <span className="text-sm font-medium text-primary-600">
-                          {contact.firstName?.charAt(0) || '?'}{contact.lastName?.charAt(0) || '?'}
+{contact.first_name_c?.charAt(0) || '?'}{contact.last_name_c?.charAt(0) || '?'}
                         </span>
                       </div>
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-slate-900">
-                        {contact.firstName} {contact.lastName}
+<div className="text-sm font-medium text-slate-900">
+                        {contact.first_name_c} {contact.last_name_c}
                       </div>
                       <div className="text-sm text-slate-500">{contact.position}</div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-slate-900">{contact.company}</div>
+<div className="text-sm text-slate-900">{contact.company_c}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-slate-900">{contact.email}</div>
-                  <div className="text-sm text-slate-500">{contact.phone}</div>
+<div className="text-sm text-slate-900">{contact.email_c}</div>
+                  <div className="text-sm text-slate-500">{contact.phone_c}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-{contact.createdAt && isValid(new Date(contact.createdAt)) 
-                    ? format(new Date(contact.createdAt), "MMM dd, yyyy")
+{contact.CreatedOn && isValid(new Date(contact.CreatedOn)) 
+                    ? format(new Date(contact.CreatedOn), "MMM dd, yyyy")
                     : "Invalid date"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

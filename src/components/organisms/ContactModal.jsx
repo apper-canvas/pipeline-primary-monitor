@@ -20,14 +20,14 @@ const ContactModal = ({ contact, isOpen, onClose, onSave }) => {
 
   useEffect(() => {
     if (contact) {
-      setFormData({
-        firstName: contact.firstName || "",
-        lastName: contact.lastName || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        company: contact.company || "",
-        position: contact.position || "",
-        notes: contact.notes || ""
+setFormData({
+        firstName: contact.first_name_c || "",
+        lastName: contact.last_name_c || "",
+        email: contact.email_c || "",
+        phone: contact.phone_c || "",
+        company: contact.company_c || "",
+        position: contact.position_c || "",
+        notes: contact.notes_c || ""
       });
     } else {
       setFormData({
@@ -90,7 +90,15 @@ const ContactModal = ({ contact, isOpen, onClose, onSave }) => {
     setLoading(true);
     try {
       if (contact) {
-        await contactService.update(contact.Id, formData);
+await contactService.update(contact.Id, {
+          first_name_c: formData.firstName,
+          last_name_c: formData.lastName,
+          email_c: formData.email,
+          phone_c: formData.phone,
+          company_c: formData.company,
+          position_c: formData.position,
+          notes_c: formData.notes
+        });
         toast.success("Contact updated successfully");
       } else {
         await contactService.create(formData);
