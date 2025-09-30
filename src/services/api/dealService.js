@@ -305,5 +305,3 @@ class DealService {
 }
 
 export const dealService = new DealService();
-
-export const dealService = new DealService();

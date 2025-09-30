@@ -370,5 +370,3 @@ class ActivityService {
 }
 
 export const activityService = new ActivityService();
-
-export const activityService = new ActivityService();
