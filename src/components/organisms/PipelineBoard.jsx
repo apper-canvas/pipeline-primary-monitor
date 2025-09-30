@@ -6,8 +6,8 @@ import ApperIcon from "@/components/ApperIcon";
 const PipelineBoard = ({ deals, stages, onStageChange, onDealClick }) => {
   const [draggedDeal, setDraggedDeal] = useState(null);
 
-  const getDealsByStage = (stage) => {
-    return deals.filter(deal => deal.stage.toLowerCase() === stage.toLowerCase());
+const getDealsByStage = (stage) => {
+    return deals.filter(deal => deal.stage && deal.stage.toLowerCase() === stage.toLowerCase());
   };
 
   const getStageTotal = (stage) => {

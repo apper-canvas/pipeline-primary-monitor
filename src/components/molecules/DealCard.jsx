@@ -22,7 +22,8 @@ const DealCard = ({
     }).format(value);
   };
 
-  const getStageColor = (stage) => {
+const getStageColor = (stage) => {
+    if (!stage) return "default";
     switch (stage.toLowerCase()) {
       case "lead": return "default";
       case "qualified": return "primary";
@@ -45,7 +46,7 @@ const DealCard = ({
   return (
     <Card
       className={cn(
-        `pipeline-card stage-${deal.stage.toLowerCase()}`,
+`pipeline-card stage-${deal.stage?.toLowerCase() || 'unknown'}`,
         isDragging && "opacity-50 transform rotate-1",
         className
       )}
@@ -66,8 +67,8 @@ const DealCard = ({
             <span className="text-lg font-bold text-slate-900">
               {formatCurrency(deal.value)}
             </span>
-            <Badge variant={getStageColor(deal.stage)} size="sm">
-              {deal.stage}
+<Badge variant={getStageColor(deal.stage)} size="sm">
+              {deal.stage || 'No Stage'}
             </Badge>
           </div>
           
