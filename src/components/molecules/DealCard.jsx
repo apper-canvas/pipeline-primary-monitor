@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import ApperIcon from "@/components/ApperIcon";
-import { format } from "date-fns";
+import React, { useState } from "react";
+import { format, isValid } from "date-fns";
 import { cn } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const DealCard = ({ 
   deal,
@@ -73,7 +73,9 @@ const DealCard = ({
           
           <div className="flex items-center text-sm text-slate-600">
             <ApperIcon name="Calendar" className="h-4 w-4 mr-1" />
-            <span>Close: {format(new Date(deal.expectedCloseDate), "MMM dd")}</span>
+<span>Close: {deal.expectedCloseDate && isValid(new Date(deal.expectedCloseDate))
+              ? format(new Date(deal.expectedCloseDate), "MMM dd")
+              : "Invalid date"}</span>
           </div>
           
           <div className="flex items-center justify-between">

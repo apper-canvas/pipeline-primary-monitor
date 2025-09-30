@@ -1,7 +1,9 @@
-import { format, isToday, isYesterday } from "date-fns";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
+import { format, isToday, isYesterday, isValid } from "date-fns";
+import React from "react";
 import ApperIcon from "@/components/ApperIcon";
+import Activities from "@/components/pages/Activities";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const ActivityTimeline = ({ activities, loading }) => {
 const getActivityIcon = (type) => {
@@ -30,8 +32,11 @@ const getActivityColor = (type) => {
     }
   };
 
-  const formatDate = (date) => {
+const formatDate = (date) => {
+    if (!date) return "Invalid date";
     const activityDate = new Date(date);
+    if (!isValid(activityDate)) return "Invalid date";
+    
     if (isToday(activityDate)) {
       return `Today at ${format(activityDate, "h:mm a")}`;
     } else if (isYesterday(activityDate)) {

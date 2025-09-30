@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import Button from "@/components/atoms/Button";
+import React, { useState } from "react";
+import { format, isValid } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
-import { format } from "date-fns";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
   const [sortBy, setSortBy] = useState("firstName");
@@ -105,7 +105,9 @@ const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
                   <div className="text-sm text-slate-500">{contact.phone}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                  {format(new Date(contact.createdAt), "MMM dd, yyyy")}
+{contact.createdAt && isValid(new Date(contact.createdAt)) 
+                    ? format(new Date(contact.createdAt), "MMM dd, yyyy")
+                    : "Invalid date"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center space-x-2">
