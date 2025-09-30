@@ -84,8 +84,8 @@ const ContactTable = ({ contacts, onEdit, onDelete, onView, loading }) => {
                   <div className="flex items-center">
                     <div className="h-10 w-10 flex-shrink-0">
                       <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                        <span className="text-sm font-medium text-primary-600">
-                          {contact.firstName.charAt(0)}{contact.lastName.charAt(0)}
+<span className="text-sm font-medium text-primary-600">
+                          {contact.firstName?.charAt(0) || '?'}{contact.lastName?.charAt(0) || '?'}
                         </span>
                       </div>
                     </div>
