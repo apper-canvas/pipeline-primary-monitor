@@ -45,8 +45,8 @@ const Dashboard = () => {
 
   const getStats = () => {
     const totalDeals = data.deals.length;
-    const totalValue = data.deals.reduce((sum, deal) => sum + deal.value, 0);
-    const closedDeals = data.deals.filter(deal => deal.stage.toLowerCase() === "closed").length;
+const totalValue = data.deals.reduce((sum, deal) => sum + (deal.value_c || 0), 0);
+    const closedDeals = data.deals.filter(deal => deal.stage_c?.toLowerCase() === "closed").length;
     const winRate = totalDeals > 0 ? Math.round((closedDeals / totalDeals) * 100) : 0;
     
     return {
@@ -58,8 +58,8 @@ const Dashboard = () => {
   };
 
   const getRecentActivities = () => {
-    return data.activities
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+return data.activities
+      .sort((a, b) => new Date(b.date_c) - new Date(a.date_c))
       .slice(0, 5);
   };
 
@@ -68,8 +68,8 @@ const Dashboard = () => {
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
     
     return data.deals.filter(deal => {
-      const closeDate = new Date(deal.expectedCloseDate);
-      return closeDate >= today && closeDate <= nextWeek && deal.stage.toLowerCase() !== "closed";
+const closeDate = new Date(deal.expected_close_date_c);
+      return closeDate >= today && closeDate <= nextWeek && deal.stage_c?.toLowerCase() !== "closed";
     }).slice(0, 5);
   };
 
@@ -169,9 +169,9 @@ const Dashboard = () => {
               {upcomingTasks.length > 0 ? (
                 <div className="space-y-4">
                   {upcomingTasks.map((deal) => (
-                    <div key={deal.Id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+<div key={deal.Id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                       <div>
-                        <h4 className="font-medium text-slate-900">{deal.title}</h4>
+                        <h4 className="font-medium text-slate-900">{deal.title_c}</h4>
                         <p className="text-sm text-slate-600">
                           Value: {formatCurrency(deal.value)} • {deal.probability}% probability
                         </p>

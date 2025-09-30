@@ -56,18 +56,18 @@ const Reports = () => {
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
     return {
-      deals: data.deals.filter(deal => new Date(deal.createdAt) >= cutoffDate),
-      contacts: data.contacts.filter(contact => new Date(contact.createdAt) >= cutoffDate),
-      activities: data.activities.filter(activity => new Date(activity.date) >= cutoffDate)
+deals: data.deals.filter(deal => new Date(deal.CreatedOn) >= cutoffDate),
+      contacts: data.contacts.filter(contact => new Date(contact.CreatedOn) >= cutoffDate),
+      activities: data.activities.filter(activity => new Date(activity.date_c) >= cutoffDate)
     };
   };
 
   const getKeyMetrics = () => {
     const filtered = getFilteredData();
     const totalDeals = filtered.deals.length;
-    const totalValue = filtered.deals.reduce((sum, deal) => sum + deal.value, 0);
-    const closedDeals = filtered.deals.filter(deal => deal.stage.toLowerCase() === "closed");
-    const closedValue = closedDeals.reduce((sum, deal) => sum + deal.value, 0);
+const totalValue = filtered.deals.reduce((sum, deal) => sum + (deal.value_c || 0), 0);
+    const closedDeals = filtered.deals.filter(deal => deal.stage_c?.toLowerCase() === "closed");
+    const closedValue = closedDeals.reduce((sum, deal) => sum + (deal.value_c || 0), 0);
     const winRate = totalDeals > 0 ? Math.round((closedDeals.length / totalDeals) * 100) : 0;
     const avgDealSize = closedDeals.length > 0 ? Math.round(closedValue / closedDeals.length) : 0;
 
@@ -87,7 +87,7 @@ const Reports = () => {
     const filtered = getFilteredData();
     
     const stageData = stages.map(stage => {
-      const stageDeals = filtered.deals.filter(deal => deal.stage === stage);
+const stageDeals = filtered.deals.filter(deal => deal.stage_c === stage);
       return {
         stage,
         count: stageDeals.length,
@@ -131,8 +131,8 @@ const Reports = () => {
     };
 
     filtered.activities.forEach(activity => {
-      if (activityCounts.hasOwnProperty(activity.type)) {
-        activityCounts[activity.type]++;
+if (activityCounts.hasOwnProperty(activity.type_c)) {
+        activityCounts[activity.type_c]++;
       }
     });
 
@@ -168,12 +168,12 @@ const Reports = () => {
       months.push(monthStr);
       
       const monthDeals = data.deals.filter(deal => {
-        const dealDate = new Date(deal.createdAt);
+const dealDate = new Date(deal.CreatedOn);
         return dealDate.getMonth() === date.getMonth() && dealDate.getFullYear() === date.getFullYear();
       });
-      
+
       dealCounts.push(monthDeals.length);
-      dealValues.push(monthDeals.reduce((sum, deal) => sum + deal.value, 0));
+      dealValues.push(monthDeals.reduce((sum, deal) => sum + (deal.value_c || 0), 0));
     }
 
     return {

@@ -22,11 +22,11 @@ const Activities = () => {
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [typeFilter, setTypeFilter] = useState("");
   const [contactFilter, setContactFilter] = useState("");
-  const [formData, setFormData] = useState({
-    type: "Note",
-    contactId: "",
-    subject: "",
-    notes: ""
+const [formData, setFormData] = useState({
+    type_c: "Note",
+    contact_id_c: "",
+    subject_c: "",
+    notes_c: ""
   });
 
   const activityTypes = [
@@ -66,19 +66,19 @@ const Activities = () => {
     let filtered = [...activities];
 
     if (typeFilter) {
-      filtered = filtered.filter(activity => 
-        activity.type.toLowerCase() === typeFilter.toLowerCase()
+filtered = filtered.filter(activity => 
+        activity.type_c?.toLowerCase() === typeFilter.toLowerCase()
       );
     }
 
     if (contactFilter) {
-      filtered = filtered.filter(activity => 
-        activity.contactId === parseInt(contactFilter)
+filtered = filtered.filter(activity => 
+        activity.contact_id_c?.Id === parseInt(contactFilter) || activity.contact_id_c === parseInt(contactFilter)
       );
     }
 
     // Sort by date, newest first
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+filtered.sort((a, b) => new Date(b.date_c) - new Date(a.date_c));
 
     setFilteredActivities(filtered);
   };
@@ -90,10 +90,10 @@ const Activities = () => {
   const handleCancelAdd = () => {
     setIsAddingActivity(false);
     setFormData({
-      type: "Note",
-      contactId: "",
-      subject: "",
-      notes: ""
+type_c: "Note",
+      contact_id_c: "",
+      subject_c: "",
+      notes_c: ""
     });
   };
 
@@ -115,26 +115,26 @@ const Activities = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.subject.trim() || !formData.contactId) {
+if (!formData.subject_c?.trim() || !formData.contact_id_c) {
       toast.error("Please fill in all required fields");
       return;
     }
 
     try {
-      const activityData = {
+const activityData = {
         ...formData,
-        contactId: parseInt(formData.contactId),
-        date: new Date().toISOString()
+        contact_id_c: parseInt(formData.contact_id_c),
+        date_c: new Date().toISOString()
       };
 
       await activityService.create(activityData);
       toast.success("Activity logged successfully");
       setIsAddingActivity(false);
       setFormData({
-        type: "Note",
-        contactId: "",
-        subject: "",
-        notes: ""
+type_c: "Note",
+        contact_id_c: "",
+        subject_c: "",
+        notes_c: ""
       });
       await loadData();
     } catch (error) {
@@ -144,8 +144,8 @@ const Activities = () => {
 
   const getContactOptions = () => {
     return contacts.map(contact => ({
-      value: contact.Id.toString(),
-      label: `${contact.firstName} ${contact.lastName} - ${contact.company}`
+value: contact.Id.toString(),
+      label: `${contact.first_name_c} ${contact.last_name_c} - ${contact.company_c}`
     }));
   };
 
@@ -153,13 +153,13 @@ const Activities = () => {
     const thisMonth = new Date();
     thisMonth.setDate(1);
     
-    const thisMonthActivities = activities.filter(activity => 
-      new Date(activity.date) >= thisMonth
+const thisMonthActivities = activities.filter(activity => 
+      new Date(activity.date_c) >= thisMonth
     );
 
     const byType = activityTypes.reduce((acc, type) => {
-      acc[type.value] = thisMonthActivities.filter(activity => 
-        activity.type === type.value
+acc[type.value] = thisMonthActivities.filter(activity => 
+        activity.type_c === type.value
       ).length;
       return acc;
     }, {});
@@ -243,13 +243,15 @@ const Activities = () => {
                 <FilterSelect
                   label="Activity Type"
                   options={activityTypes}
-                  value={formData.type}
-                  onChange={(value) => handleSelectChange("type", value)}
+value={formData.type_c}
+                  onChange={(value) => handleSelectChange("type_c", value)}
                 />
                 <FilterSelect
                   label="Contact"
-                  options={getContactOptions()}
-                  value={formData.contactId}
+options={getContactOptions()}
+                  value={formData.contact_id_c}
+value={formData.contact_id_c}
+                  onChange={(value) => handleSelectChange("contact_id_c", value)}
                   onChange={(value) => handleSelectChange("contactId", value)}
                   placeholder="Select a contact"
                 />
@@ -258,8 +260,9 @@ const Activities = () => {
               <FormField
                 label="Subject"
                 name="subject"
-                value={formData.subject}
+value={formData.subject_c}
                 onChange={handleInputChange}
+                name="subject_c"
                 placeholder="Enter activity subject"
                 required
               />
@@ -272,8 +275,9 @@ const Activities = () => {
                   id="notes"
                   name="notes"
                   rows={3}
-                  value={formData.notes}
+value={formData.notes_c}
                   onChange={handleInputChange}
+                  name="notes_c"
                   className="form-input resize-none"
                   placeholder="Additional details about this activity..."
                 />

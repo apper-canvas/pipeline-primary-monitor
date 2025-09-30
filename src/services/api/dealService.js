@@ -1,75 +1,309 @@
-import dealsData from "@/services/mockData/deals.json";
+import { toast } from 'react-toastify';
 
 class DealService {
   constructor() {
-    this.deals = [...dealsData];
+    this.tableName = 'deal_c';
+    this.apperClient = null;
   }
 
-  async delay() {
-    return new Promise(resolve => setTimeout(resolve, Math.random() * 300 + 200));
+  getApperClient() {
+    if (!this.apperClient) {
+      const { ApperClient } = window.ApperSDK;
+      this.apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+    }
+    return this.apperClient;
   }
 
   async getAll() {
-    await this.delay();
-    return [...this.deals];
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "Owner"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "value_c"}},
+          {"field": {"Name": "stage_c"}},
+          {"field": {"Name": "probability_c"}},
+          {"field": {"Name": "expected_close_date_c"}},
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "contact_id_c"}}
+        ],
+        orderBy: [{"fieldName": "CreatedOn", "sorttype": "DESC"}],
+        pagingInfo: {"limit": 100, "offset": 0}
+      };
+
+      const response = await this.getApperClient().fetchRecords(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to fetch deals:", response?.message);
+        toast.error(response?.message || "Failed to fetch deals");
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching deals:", error?.response?.data?.message || error);
+      toast.error("Failed to load deals");
+      return [];
+    }
   }
 
   async getById(id) {
-    await this.delay();
-    const deal = this.deals.find(d => d.Id === id);
-    if (!deal) {
-      throw new Error("Deal not found");
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "Owner"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "value_c"}},
+          {"field": {"Name": "stage_c"}},
+          {"field": {"Name": "probability_c"}},
+          {"field": {"Name": "expected_close_date_c"}},
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "contact_id_c"}}
+        ]
+      };
+
+      const response = await this.getApperClient().getRecordById(this.tableName, id, params);
+      
+      if (!response?.success) {
+        console.error(`Failed to fetch deal ${id}:`, response?.message);
+        toast.error(response?.message || "Deal not found");
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching deal ${id}:`, error?.response?.data?.message || error);
+      toast.error("Failed to load deal");
+      return null;
     }
-    return { ...deal };
   }
 
   async create(dealData) {
-    await this.delay();
-    const newDeal = {
-      ...dealData,
-      Id: Math.max(...this.deals.map(d => d.Id)) + 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    this.deals.push(newDeal);
-    return { ...newDeal };
+    try {
+      // Only include Updateable fields, convert lookup field to integer
+      const params = {
+        records: [{
+          Name: dealData.Name || dealData.title_c,
+          Tags: dealData.Tags || '',
+          title_c: dealData.title_c,
+          value_c: parseFloat(dealData.value_c),
+          stage_c: dealData.stage_c,
+          probability_c: parseInt(dealData.probability_c),
+          expected_close_date_c: dealData.expected_close_date_c,
+          notes_c: dealData.notes_c,
+          contact_id_c: parseInt(dealData.contact_id_c)
+        }]
+      };
+
+      const response = await this.getApperClient().createRecord(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to create deal:", response?.message);
+        toast.error(response?.message || "Failed to create deal");
+        return null;
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} deals: ${JSON.stringify(failed)}`);
+          failed.forEach(record => {
+            record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success('Deal created successfully!');
+          return successful[0].data;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error creating deal:", error?.response?.data?.message || error);
+      toast.error("Failed to create deal");
+      return null;
+    }
   }
 
   async update(id, dealData) {
-    await this.delay();
-    const index = this.deals.findIndex(d => d.Id === id);
-    if (index === -1) {
-      throw new Error("Deal not found");
+    try {
+      // Only include Updateable fields, convert lookup field to integer
+      const params = {
+        records: [{
+          Id: id,
+          Name: dealData.Name || dealData.title_c,
+          Tags: dealData.Tags || '',
+          title_c: dealData.title_c,
+          value_c: parseFloat(dealData.value_c),
+          stage_c: dealData.stage_c,
+          probability_c: parseInt(dealData.probability_c),
+          expected_close_date_c: dealData.expected_close_date_c,
+          notes_c: dealData.notes_c,
+          contact_id_c: parseInt(dealData.contact_id_c)
+        }]
+      };
+
+      const response = await this.getApperClient().updateRecord(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to update deal:", response?.message);
+        toast.error(response?.message || "Failed to update deal");
+        return null;
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} deals: ${JSON.stringify(failed)}`);
+          failed.forEach(record => {
+            record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success('Deal updated successfully!');
+          return successful[0].data;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error updating deal:", error?.response?.data?.message || error);
+      toast.error("Failed to update deal");
+      return null;
     }
-    
-    this.deals[index] = {
-      ...this.deals[index],
-      ...dealData,
-      updatedAt: new Date().toISOString()
-    };
-    return { ...this.deals[index] };
   }
 
   async delete(id) {
-    await this.delay();
-    const index = this.deals.findIndex(d => d.Id === id);
-    if (index === -1) {
-      throw new Error("Deal not found");
+    try {
+      const params = { 
+        RecordIds: [id]
+      };
+
+      const response = await this.getApperClient().deleteRecord(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to delete deal:", response?.message);
+        toast.error(response?.message || "Failed to delete deal");
+        return false;
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} deals: ${JSON.stringify(failed)}`);
+          failed.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success('Deal deleted successfully!');
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      console.error("Error deleting deal:", error?.response?.data?.message || error);
+      toast.error("Failed to delete deal");
+      return false;
     }
-    
-    const deletedDeal = this.deals.splice(index, 1)[0];
-    return { ...deletedDeal };
   }
 
   async getByContactId(contactId) {
-    await this.delay();
-    return this.deals.filter(d => d.contactId === contactId).map(d => ({ ...d }));
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "value_c"}},
+          {"field": {"Name": "stage_c"}},
+          {"field": {"Name": "probability_c"}},
+          {"field": {"Name": "expected_close_date_c"}},
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "contact_id_c"}}
+        ],
+        where: [{"FieldName": "contact_id_c", "Operator": "EqualTo", "Values": [parseInt(contactId)]}],
+        pagingInfo: {"limit": 100, "offset": 0}
+      };
+
+      const response = await this.getApperClient().fetchRecords(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to fetch deals by contact:", response?.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching deals by contact:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getByStage(stage) {
-    await this.delay();
-    return this.deals.filter(d => d.stage.toLowerCase() === stage.toLowerCase()).map(d => ({ ...d }));
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "value_c"}},
+          {"field": {"Name": "stage_c"}},
+          {"field": {"Name": "probability_c"}},
+          {"field": {"Name": "expected_close_date_c"}},
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "contact_id_c"}}
+        ],
+        where: [{"FieldName": "stage_c", "Operator": "EqualTo", "Values": [stage]}],
+        pagingInfo: {"limit": 100, "offset": 0}
+      };
+
+      const response = await this.getApperClient().fetchRecords(this.tableName, params);
+      
+      if (!response?.success) {
+        console.error("Failed to fetch deals by stage:", response?.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching deals by stage:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 }
+
+export const dealService = new DealService();
 
 export const dealService = new DealService();

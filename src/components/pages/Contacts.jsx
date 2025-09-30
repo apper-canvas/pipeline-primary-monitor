@@ -48,18 +48,18 @@ const Contacts = () => {
     // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(contact =>
-        contact.firstName.toLowerCase().includes(search) ||
-        contact.lastName.toLowerCase().includes(search) ||
-        contact.email.toLowerCase().includes(search) ||
-        contact.company.toLowerCase().includes(search)
+filtered = filtered.filter(contact =>
+        contact.first_name_c?.toLowerCase().includes(search) ||
+        contact.last_name_c?.toLowerCase().includes(search) ||
+        contact.email_c?.toLowerCase().includes(search) ||
+        contact.company_c?.toLowerCase().includes(search)
       );
     }
 
     // Company filter
-    if (companyFilter) {
+if (companyFilter) {
       filtered = filtered.filter(contact =>
-        contact.company.toLowerCase().includes(companyFilter.toLowerCase())
+        contact.company_c?.toLowerCase().includes(companyFilter.toLowerCase())
       );
     }
 
@@ -78,7 +78,7 @@ const Contacts = () => {
 
   const handleViewContact = (contact) => {
     // In a real app, this would navigate to a detail page
-    toast.info(`Viewing ${contact.firstName} ${contact.lastName}`);
+toast.info(`Viewing ${contact.first_name_c} ${contact.last_name_c}`);
   };
 
   const handleDeleteContact = async (contactId) => {
@@ -102,7 +102,7 @@ const Contacts = () => {
   };
 
   const getCompanyOptions = () => {
-    const companies = [...new Set(contacts.map(contact => contact.company))];
+const companies = [...new Set(contacts.map(contact => contact.company_c).filter(Boolean))];
     return companies.map(company => ({ label: company, value: company }));
   };
 

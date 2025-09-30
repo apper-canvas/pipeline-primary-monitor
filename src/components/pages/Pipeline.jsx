@@ -55,7 +55,7 @@ const Pipeline = () => {
       await dealService.update(dealId, updatedDeal);
       
       setDeals(prev => prev.map(d => 
-        d.Id === dealId ? { ...d, stage: newStage } : d
+d.Id === dealId ? { ...d, stage_c: newStage } : d
       ));
       
       toast.success(`Deal moved to ${newStage}`);
@@ -69,7 +69,7 @@ const Pipeline = () => {
   };
 
   const getTotalPipelineValue = () => {
-    return deals.reduce((sum, deal) => sum + deal.value, 0);
+return deals.reduce((sum, deal) => sum + (deal.value_c || 0), 0);
   };
 
   const formatCurrency = (value) => {
